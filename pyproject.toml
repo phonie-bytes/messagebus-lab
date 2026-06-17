@@ -1,0 +1,52 @@
+[project]
+name = "messagebus-lab"
+version = "0.1.0"
+description = "A learning project for message bus systems with modern SE practices"
+requires-python = ">=3.11"
+dependencies = [
+    "pika>=1.3.2",            # RabbitMQ client (sync)
+    "aio-pika>=9.4.0",        # RabbitMQ client (async) — used in Step 7
+    "pydantic>=2.7",          # data validation
+    "pydantic-settings>=2.3", # config from env (Step 2)
+    "structlog>=24.1",        # structured logging (Step 3)
+    "tenacity>=8.3",          # retry logic (Step 6)
+    "prometheus-client>=0.20",# metrics (Step 8)
+    "opentelemetry-api>=1.25",
+    "opentelemetry-sdk>=1.25",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "testcontainers[rabbitmq]>=4.5",  # integration tests (Step 9)
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "pre-commit>=3.7",
+]
+ 
+[project.scripts]
+messagebus = "messagebus.__main__:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/messagebus"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM", "PL"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
