@@ -1,0 +1,19 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: messagebus-rabbitmq
+    ports:
+      # AMQP protocol port (what our Python code connects to)
+      - "5672:5672"
+      # Management UI port (what we access via web browser)
+      - "15672:15672"
+    environment:
+      # Default credentials (matches our .env file from Step 2)
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      # This tells Docker how to check if RabbitMQ is fully ready to accept messages
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

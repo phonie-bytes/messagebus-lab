@@ -1,32 +1,28 @@
+import argparse
 import structlog
 from messagebus.config import settings
 from messagebus.logging import setup_logging
-
+from messagebus.producer import send_message
+from messagebus.consumer import start_consumer
 
 def main() -> None:
-    # Initialize logging first!
     setup_logging()
-    
-    # Get a logger instance
     log = structlog.get_logger()
     
-    # Log with structured key-value pairs
-    log.info("app.starting", app_name=settings.app_name, env=settings.environment)
+    # Set up a simple command-line interface
+    parser = argparse.ArgumentParser(description="Message Bus Lab CLI")
+    parser.add_argument("action", choices=["send", "receive"], help="Send or receive a message")
+    parser.add_argument("--message", "-m", default="Hello World!", help="Message to send")
+    parser.add_argument("--routing-key", "-r", default="orders", help="Routing key (e.g., orders, emails)")
     
-    try:
-        # Simulate some work
-        log.info("app.connecting_to_broker", host=settings.rabbitmq_host, port=settings.rabbitmq_port)
-        
-        # Simulate an error
-        raise ValueError("Simulated connection failure!")
-        
-    except Exception as e:
-        # structlog automatically formats the exception beautifully
-        log.error("app.failed", error=str(e))
-        return
+    args = parser.parse_args()
 
-    log.info("app.ready")
+    log.info("app.starting", app_name=settings.app_name, action=args.action)
 
+    if args.action == "send":
+        send_message(routing_key=args.routing_key, message=args.message)
+    elif args.action == "receive":
+        start_consumer()
 
 if __name__ == "__main__":
     main()
