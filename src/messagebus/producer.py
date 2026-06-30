@@ -12,10 +12,10 @@ def send_message(routing_key: str, message: str) -> None:
     connection = pika.BlockingConnection(pika.URLParameters(settings.rabbitmq_url))
     channel = connection.channel()
 
-    # 1. Declare the Exchange as DURABLE (matching the async consumer)
+    # Declare the Exchange as DURABLE
     channel.exchange_declare(exchange='messages_direct', exchange_type='direct', durable=True)
 
-    # 2. Publish the message
+    # Publish the message
     channel.basic_publish(
         exchange='messages_direct',
         routing_key=routing_key,
