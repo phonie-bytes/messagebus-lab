@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s # Scrape our app every 5 seconds
+
+scrape_configs:
+  - job_name: "messagebus-app"
+    static_configs:
+      # host.docker.internal allows the container to talk to your Windows host machine
+      - targets: ["host.docker.internal:8000"] 

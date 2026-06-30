@@ -9,25 +9,22 @@ def send_message(routing_key: str, message: str) -> None:
     
     log.info("producer.connecting", url=settings.rabbitmq_host)
     
-    # 1. Establish a connection to RabbitMQ
     connection = pika.BlockingConnection(pika.URLParameters(settings.rabbitmq_url))
     channel = connection.channel()
 
-    # 2. Declare the Exchange
-    # We name it 'messages_direct'. 'direct' means it routes by exact routing_key match.
-    channel.exchange_declare(exchange='messages_direct', exchange_type='direct')
+    # 1. Declare the Exchange as DURABLE (matching the async consumer)
+    channel.exchange_declare(exchange='messages_direct', exchange_type='direct', durable=True)
 
-    # 3. Publish the message
+    # 2. Publish the message
     channel.basic_publish(
         exchange='messages_direct',
-        routing_key=routing_key,  # e.g., 'orders' or 'emails'
-        body=message.encode('utf-8'), # Messages must be bytes
+        routing_key=routing_key,
+        body=message.encode('utf-8'),
         properties=pika.BasicProperties(
-            delivery_mode=2  # 2 means "persistent" - save to disk so it survives a crash
+            delivery_mode=2  # 2 means persistent (save to disk)
         )
     )
 
     log.info("producer.sent", routing_key=routing_key, message=message)
     
-    # 4. Close the connection cleanly
     connection.close()
