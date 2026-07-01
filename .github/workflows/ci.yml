@@ -1,0 +1,48 @@
+name: CI Pipeline
+
+# 1. When should this run?
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+# 2. Define the jobs
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step A: Get our code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step B: Install uv (the modern way to manage Python in CI)
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true # Caches our dependencies for blazing fast runs!
+
+      # Step C: Set up Python
+      - name: Set up Python
+        run: uv python install 3.11
+
+      # Step D: Install dependencies (including dev tools!)
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      # Step E: Run the Linter (Ruff)
+      - name: Lint with Ruff
+        run: uv run ruff check src tests
+
+      # Step F: Run the Formatter Check (Ruff format)
+      - name: Check formatting with Ruff
+        run: uv run ruff format --check src tests
+
+      # Step G: Run Type Checker (Mypy)
+      - name: Type check with Mypy
+        run: uv run mypy src
+
+      # Step H: Run Tests (Pytest + Testcontainers)
+      - name: Run tests
+        run: uv run pytest -v
