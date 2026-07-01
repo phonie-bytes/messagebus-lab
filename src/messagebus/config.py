@@ -6,9 +6,9 @@ class Settings(BaseSettings):
 
     # Configure pydantic to read from a .env file
     model_config = SettingsConfigDict(
-        env_file=".env", 
+        env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore" # Ignore extra variables in the .env file
+        extra="ignore",  # Ignore extra variables in the .env file
     )
 
     # App settings

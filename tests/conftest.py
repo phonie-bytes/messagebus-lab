@@ -1,5 +1,5 @@
-import pytest
 import pika
+import pytest
 from testcontainers.rabbitmq import RabbitMqContainer
 
 
@@ -9,13 +9,13 @@ def rabbitmq_container():
     with RabbitMqContainer("rabbitmq:3.13-management") as rabbitmq:
         host = rabbitmq.get_container_host_ip()
         port = rabbitmq.get_exposed_port(5672)
-        
+
         #        # Yield a dictionary of the connection parts
         yield {
             "host": host,
             "port": port,
-            "user": "guest",      # <-- Change to guest
-            "password": "guest"   # <-- Change to guest
+            "user": "guest",  # <-- Change to guest
+            "password": "guest",  # <-- Change to guest
         }
 
 
@@ -26,6 +26,6 @@ def rabbitmq_channel(rabbitmq_container):
     params = pika.URLParameters(url)
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
-    
+
     yield channel
     connection.close()

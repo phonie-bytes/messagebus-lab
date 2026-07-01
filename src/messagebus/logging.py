@@ -1,11 +1,13 @@
 import logging
+
 import structlog
+
 from messagebus.config import settings
 
 
 def setup_logging() -> None:
     """Configures structlog for beautiful, structured JSON logging."""
-    
+
     # 1. Configure the standard library logging underneath
     logging.basicConfig(
         format="%(message)s",
@@ -15,10 +17,10 @@ def setup_logging() -> None:
     # 2. Define how structlog processes logs
     processors = [
         structlog.contextvars.merge_contextvars,  # Merges any global context
-        structlog.processors.add_log_level,       # Adds "level": "info"
-        structlog.processors.TimeStamper(fmt="iso"), # Adds ISO timestamp
+        structlog.processors.add_log_level,  # Adds "level": "info"
+        structlog.processors.TimeStamper(fmt="iso"),  # Adds ISO timestamp
         structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,     # Formats exceptions nicely
+        structlog.processors.format_exc_info,  # Formats exceptions nicely
     ]
 
     # 3. Output format: JSON for production, pretty colors for local dev
