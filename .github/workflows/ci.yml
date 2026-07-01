@@ -20,8 +20,7 @@ jobs:
       # Step B: Install uv (the modern way to manage Python in CI)
       - name: Install uv
         uses: astral-sh/setup-uv@v3
-        with:
-          enable-cache: true # Caches our dependencies for blazing fast runs!
+        
 
       # Step C: Set up Python
       - name: Set up Python
