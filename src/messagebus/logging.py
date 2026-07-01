@@ -1,11 +1,13 @@
 import logging
+
 import structlog
+
 from messagebus.config import settings
 
 
 def setup_logging() -> None:
     """Configures structlog for beautiful, structured JSON logging."""
-    
+
     logging.basicConfig(
         format="%(message)s",
         level=logging.INFO,
