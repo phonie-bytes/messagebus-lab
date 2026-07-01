@@ -33,20 +33,18 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
 
-  app:                                     # <-- ADD THIS SERVICE
+  app:                                     
     build: .
-    container_name: messagebus-app
     depends_on:
       rabbitmq:
         condition: service_healthy
     environment:
-      # In Docker networking, "localhost" doesn't work! 
-      # We must use the name of the rabbitmq service.
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
       - ENVIRONMENT=production
-    ports:
-      # Expose metrics port so Prometheus can scrape it
-      - "9100:9100"
+    #ports:
+    #  - "9100:9100"
+    deploy:
+      replicas: 3  # <-- THIS TELLS DOCKER TO RUN 3 COPIES!
