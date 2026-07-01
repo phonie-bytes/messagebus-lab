@@ -1,10 +1,10 @@
 import asyncio
+from typing import Any
 
 import aio_pika
 import structlog
 import tenacity
 from opentelemetry import trace
-from typing import Any
 
 from messagebus.config import settings
 from messagebus.metrics import (

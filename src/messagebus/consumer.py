@@ -1,14 +1,13 @@
+from typing import Any
+
 import pika
 import structlog
 import tenacity
-
-from typing import Any
 
 from messagebus.config import settings
 
 log = structlog.get_logger()
 
-from messagebus.config import settings
 
 log = structlog.get_logger()
 
